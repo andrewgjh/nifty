@@ -1,0 +1,11 @@
+<% WISHLIST.each do |id, item| %>
+  <div id='<%= id %>' class='wishlist-item-container'>
+    <p><%= item %></p>
+    <img id='delete--<%= id %>' class='icon delete' src="/images/trash-can.png" />
+  </div>
+<% end %>
+
+<form method='post' action='/wishlist/new'>
+  <input type='text' name='wishlist_item'>
+  <button type="submit">Add to WishList</button>
+</form>
