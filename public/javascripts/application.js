@@ -7,7 +7,7 @@ $(() => {
       url: `/wishlist/${item_id}`,
     });
     request.done((data, status, jqXHR) => {
-      
+      $(`div#${item_id}`).fadeOut();
     });
   });
 });

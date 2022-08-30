@@ -23,7 +23,7 @@ end
 delete '/wishlist/:id' do |id|
   WISHLIST.delete(id)
   db_save
-  'hello'
+  status 204
 end
 
 post '/wishlist/new' do 
