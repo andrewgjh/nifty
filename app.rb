@@ -18,10 +18,10 @@ def db_save
 end
 
 def validate(input)
-  if input.strip.empty?
-    session[:error] = 'Please provide a valid wishlist item.'
-    redirect '/wishlist'
-  end
+  return unless input.strip.empty?
+
+  session[:error] = 'Please provide a valid wishlist item.'
+  redirect '/wishlist'
 end
 
 def url?(input)
@@ -29,11 +29,16 @@ def url?(input)
   !!a_url
 end
 
-def create(item, time_submitted)
-  if url?(item)
-    data = scrape(item)
+def create(input, time_submitted)
+  if url?(input)
+    data = scrape(input)
+    if data == :timeout_error
+      session[:error] = 'Unable to retrieve url information, please submit information manually.'
+      return false
+    end
+    data[:original_url] = input
   else
-    data = { title: item }
+    data = { title: input }
   end
   data[:time_submitted] = time_submitted
   WISHLIST[UUID.new.generate] ||= data
@@ -59,6 +64,14 @@ helpers do
   end
 end
 
+get '/login' do
+  erb :login
+end
+
+get '/signup' do
+  erb :signup
+end
+
 get '/' do
   redirect '/wishlist'
 end
@@ -75,9 +88,10 @@ end
 
 post '/wishlist/new' do
   entry = params[:wishlist_item]
-  create(entry, params[:time_submitted])
-  db_save
-  session[:message] = 'The item was successfully added!'
+  if create(entry, params[:time_submitted])
+    session[:message] = 'The item was successfully added!'
+    db_save
+  end
   redirect '/wishlist'
 end
 

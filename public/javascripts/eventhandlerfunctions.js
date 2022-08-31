@@ -6,7 +6,7 @@ const onDeleteItem = e => {
     url: `/wishlist/${item_id}`,
   });
   request.done((data, status, jqXHR) => {
-    $(`div#${item_id}`).remove();
+    $(`article#${item_id}`).remove();
     $("header").append(
       "<p class='flash message'>The item has been deleted.</p>"
     );
