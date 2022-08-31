@@ -3,14 +3,21 @@
   <head>
     <title>Nifty</title>
     <meta charset='UTF-8'>
-    <link rel="stylesheet" href="/stylesheets/styles.css" type='text/css'>
+    <link rel="stylesheet" href="stylesheets/styles.css" type='text/css'>
     <script src='/javascripts/jquery-3.6.1.js'></script>
     <script src='/javascripts/application.js'></script>
+    <script src='/javascripts/eventhandlerfunctions.js'></script>
   </head>
 
   <body>
     <header>
       <h1 class='title'>Nifty</h1>
+      <% if session[:message] %>
+        <p class='flash message'><%= session.delete(:message) %></p>
+      <% end %>
+      <% if session[:error] %>
+        <p class='flash error'><%= session.delete(:error) %></p>
+      <% end %>
     </header>
     <main>
       <%= yield %>

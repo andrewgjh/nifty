@@ -11,3 +11,22 @@ body {
   width: 2em;
   height: auto;
 }
+
+.flash {
+  font-size: 1.5em;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px 0;
+
+}
+.error{
+  background-color:lightcoral;
+}
+
+.message{
+  background-color: blue;
+}
+
+.wishlist-item-container {
+  background-color: rebeccapurple;
+}

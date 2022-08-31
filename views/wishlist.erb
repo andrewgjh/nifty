@@ -1,11 +1,19 @@
-<% WISHLIST.each do |id, item| %>
-  <div id='<%= id %>' class='wishlist-item-container'>
-    <p><%= item %></p>
-    <img id='delete--<%= id %>' class='icon delete' src="/images/trash-can.png" />
-  </div>
-<% end %>
-
 <form method='post' action='/wishlist/new'>
-  <input type='text' name='wishlist_item'>
+  <input type='hidden' name='time_submitted' value='<%= the_time %>' >
+  <input type='text' name='wishlist_item' placeholder="Please enter Item or URL">
   <button type="submit">Add to WishList</button>
 </form>
+
+<section class='current_list_container'>
+  <% WISHLIST.each do |id, item| %>
+    <div id='<%= id %>' class='wishlist-item-container'>
+      <p><%= h(item[:title]) %></p>
+      <p><%= h(item[:price]) %></p>
+      <p><%= h(item[:description]) %></p>
+      <img src="<%= item[:image_url] %>">
+      <img id='delete--<%= id %>' class='icon delete' src="/images/trash-can.png" />
+      <a href='/wishlist/<%= id %>'>More Details</a>
+    </div>
+  <% end %>
+</section>
+
