@@ -2,6 +2,7 @@
 
 require 'sinatra'
 require 'sinatra/reloader'
+require "sinatra/json"
 require 'erubis'
 require 'yaml'
 require 'uuid'
@@ -134,13 +135,22 @@ def loggedin_only
   redirect '/login'
 end
 
+def search_for_user(possible_user)
+  results = USERS.select do |email, _|
+              email.match(possible_user)
+            end.keys
+end
+
+def load_wishlist(email)
+  YAML.load_file(File.join(__dir__, "/db/wishlist-#{email}.yml"))
+end
+
 configure do
   enable :sessions
   set :session_secret, 'secret_key'
 end
 
 helpers do
-
   def h(text)
     Rack::Utils.escape_html(text)
   end
@@ -194,20 +204,30 @@ get '/logout' do
 end
 
 get '/' do
-  redirect '/wishlist'
+  erb :home
 end
 
 get '/wishlist' do
   loggedin_only
   user = current_user
-  @wishlist = YAML.load_file(File.join(__dir__, "/db/wishlist-#{user[0]}.yml"))
+  @wishlist = load_wishlist(user[0])
   erb :wishlist
+end
+
+get '/wishlists/user/:email' do |email|
+  @wishlist = load_wishlist(email)
+  json @wishlist
+end
+
+get '/wishlist/search' do 
+  possible_user = params[:email]
+  json search_for_user(possible_user)
 end
 
 delete '/wishlist/:id' do |id|
   loggedin_only
   user = current_user
-  @wishlist = YAML.load_file(File.join(__dir__, "/db/wishlist-#{user[0]}.yml"))
+  @wishlist = load_wishlist(user[0])
 
   @wishlist.delete(id)
   db_save(@wishlist, user[0])
@@ -217,7 +237,7 @@ end
 post '/wishlist/new' do
   loggedin_only
   user = current_user
-  @wishlist = YAML.load_file(File.join(__dir__, "/db/wishlist-#{user[0]}.yml"))
+  @wishlist = load_wishlist(user[0])
   entry = params[:wishlist_item]
   if create(entry, @wishlist)
     session[:message] = 'The item was successfully added!'
@@ -229,7 +249,7 @@ end
 get '/wishlist/:item' do |item|
   loggedin_only
   user = current_user
-  @wishlist = YAML.load_file(File.join(__dir__, "/db/wishlist-#{user[0]}.yml"))
+  @wishlist = load_wishlist(user[0])
   @item = @wishlist[item]
   erb :wishlist_item
 end

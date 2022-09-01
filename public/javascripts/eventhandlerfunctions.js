@@ -5,17 +5,73 @@ const onDeleteItem = e => {
     method: "delete",
     url: `/wishlist/${item_id}`,
   });
-  request.done((data, status, jqXHR) => {
+  request.done(() => {
     $(`article#${item_id}`).remove();
-    $("header").append(
-      "<p class='flash message'>The item has been deleted.</p>"
-    );
-    setTimeout(function () {
-      $("p.flash").slideUp();
-    }, 3000);
+    createFlashMessage("The item has been deleted.");
   });
 };
 
 const removeFlashMessage = ms => {
   $("p.flash").delay(ms).slideUp();
+};
+
+const onWishListSearch = e => {
+  e.preventDefault();
+  const userSection = $("section.found-users");
+  userSection.empty();
+  const searchEmail = e.target.elements.searchEmail.value;
+  if (searchEmail.trim() === "") {
+    createFlashMessage("Searches cannot be blank.");
+    return;
+  }
+  const request = $.ajax({
+    method: "get",
+    url: `/wishlist/search?email=${searchEmail}`,
+  });
+  request.done(data => {
+    if (data.length === 0) {
+      userSection.append("<p class='center'>No Users Found</p>");
+    } else {
+      userSection.append("<ul class='center users-list'></ul>");
+      data.forEach(element => {
+        $("ul.users-list").append(
+          `<li><a class='user-wishlist-link'>${element}</a></li>`
+        );
+      });
+    }
+  });
+};
+
+const onUserLinkClick = e => {
+  if (e.target.tagName === "A") {
+    const userSection = $("section.found-users");
+    userSection.empty();
+    const email = e.target.innerHTML;
+    const request = $.ajax({
+      method: "get",
+      url: `/wishlists/user/${email}`,
+    });
+    request.done(data => {
+      Object.values(data).forEach(el => {
+        userSection.append(`<article class='wishlist-item-container'>
+      <div class='wishlist-item-container-left'> 
+        <h2>${el.title}</h2>
+        <p>${el.description}</p>
+      </div>
+      <div class='wishlist-item-container-right'>
+        <p class='item_price'>${el.price}</p>
+        <img class='item_img' src="${el.image_url}">
+        <a href='/wishlist/<%= id %>'>More Details</a>   
+      </div>
+    </article>`);
+      });
+    });
+  }
+};
+
+const createFlashMessage = msg => {
+  $("header").append(`<p class='flash message'>${msg}</p>`);
+  setTimeout(function () {
+    $("p.flash").slideUp();
+  }, 3000);
 };

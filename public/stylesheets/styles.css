@@ -33,11 +33,12 @@ body {
   background-color: #CEE5D0;
 }
 
-.current_list_container{
+.current_list_container, .found-users{
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 
 .wishlist-item-container {
   background-color: #c6c9ed;
@@ -57,9 +58,18 @@ body {
 .item_img {
   width: 15em;
   height: auto;
+  border-radius: 50px;
 }
 
 .new-item-form {
+  text-align: center;
+}
+
+.wishlist-search-form{
+  text-align: center;
+}
+
+.center {
   text-align: center;
 }
 
@@ -130,3 +140,8 @@ body {
    border-color: #3c4fe0;
    box-shadow: 0 1px 0 0 rgb(35 38 59 / 5%);
  }
+
+.wishlist-search {
+  text-align: center;
+  font-family: "Alumni Sans Pinstripe";
+}
