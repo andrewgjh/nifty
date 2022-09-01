@@ -1,12 +1,11 @@
 <form method='post' action='/wishlist/new' class='new-item-form'>
-  <input type='hidden' name='time_submitted' value='<%= the_time %>' >
   <input class='input-text' type='text' name='wishlist_item' placeholder="Please enter Item or URL">
   <button class='btn ml-2' type="submit">Add to WishList</button>
 </form>
 
 <section class='current_list_container'>
   <h2>Your WishList</h2>
-  <% WISHLIST.each do |id, item| %>
+  <% @wishlist.each do |id, item| %>
     <article id='<%= id %>' class='wishlist-item-container'>
       <div class='wishlist-item-container-left'> 
         <h2><%= h(item[:title]) %></h2>

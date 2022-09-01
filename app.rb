@@ -10,19 +10,24 @@ require 'bcrypt'
 
 require_relative 'scraper.rb'
 
-WISHLIST = YAML.load_file(File.join(__dir__, '/db/wishlist.yml'))
 
 USERS = YAML.load_file(File.join(__dir__, '/db/users.yml'))
 
-def db_save
-  File.open(File.join(__dir__, '/db/wishlist.yml'), 'w') do |file|
-    YAML.dump(WISHLIST, file)
+def db_save(wishlist, usr_email)
+  File.open(File.join(__dir__, "/db/wishlist-#{usr_email}.yml"), 'w') do |file|
+    YAML.dump(wishlist, file)
   end
 end
 
 def user_db_save
   File.open(File.join(__dir__, '/db/users.yml'), 'w') do |file|
     YAML.dump(USERS, file)
+  end
+end
+
+def create_yaml(usr_email)
+   File.open(File.join(__dir__, "/db/wishlist-#{usr_email}.yml"), 'w') do |file|
+    YAML.dump({}, file)
   end
 end
 
@@ -38,7 +43,7 @@ def url?(input)
   !!a_url
 end
 
-def create(input, time_submitted)
+def create(input, wishlist)
   if url?(input)
     data = scrape(input)
     if data == :timeout_error
@@ -49,8 +54,8 @@ def create(input, time_submitted)
   else
     data = { title: input }
   end
-  data[:time_submitted] = time_submitted
-  WISHLIST[UUID.new.generate] ||= data
+  data[:time_submitted] = Time.now
+  wishlist[UUID.new.generate] = data
 end
 
 def unique?(email)
@@ -122,7 +127,7 @@ def logged_in?
   session.key?(:token) && valid_token?
 end
 
-def login_only_route
+def loggedin_only
   return if logged_in?
 
   session[:error] = 'Please log in to assess this resource.'
@@ -135,10 +140,6 @@ configure do
 end
 
 helpers do
-  def the_time
-    t = Time.new
-    t.strftime('%FT%R')
-  end
 
   def h(text)
     Rack::Utils.escape_html(text)
@@ -175,6 +176,8 @@ post '/signup' do
   password = params[:password]
   redirect '/signup' unless validate_signup(email, password)
 
+  create_yaml(email)
+
   pw_digest = BCrypt::Password.create(password).to_s
   session_token = generate_sess_token
   session_token[:email] = email
@@ -195,27 +198,38 @@ get '/' do
 end
 
 get '/wishlist' do
-  login_only_route
-
+  loggedin_only
+  user = current_user
+  @wishlist = YAML.load_file(File.join(__dir__, "/db/wishlist-#{user[0]}.yml"))
   erb :wishlist
 end
 
 delete '/wishlist/:id' do |id|
-  WISHLIST.delete(id)
-  db_save
+  loggedin_only
+  user = current_user
+  @wishlist = YAML.load_file(File.join(__dir__, "/db/wishlist-#{user[0]}.yml"))
+
+  @wishlist.delete(id)
+  db_save(@wishlist, user[0])
   status 204
 end
 
 post '/wishlist/new' do
+  loggedin_only
+  user = current_user
+  @wishlist = YAML.load_file(File.join(__dir__, "/db/wishlist-#{user[0]}.yml"))
   entry = params[:wishlist_item]
-  if create(entry, params[:time_submitted])
+  if create(entry, @wishlist)
     session[:message] = 'The item was successfully added!'
-    db_save
+    db_save(@wishlist, user[0])
   end
   redirect '/wishlist'
 end
 
 get '/wishlist/:item' do |item|
-  @item = WISHLIST[item]
+  loggedin_only
+  user = current_user
+  @wishlist = YAML.load_file(File.join(__dir__, "/db/wishlist-#{user[0]}.yml"))
+  @item = @wishlist[item]
   erb :wishlist_item
 end

@@ -2,21 +2,24 @@
 andrewdev@gmail.com:
   :password: "$2a$12$N9y2lyHYCh4X66qaQP1pPuvgUnmcA/bqubax6BOhsUwQr75K5yt.C"
   :session_id:
-    :token_id: 54a73c00-0c42-013b-5246-5ef7644c8070
-    :time_created: 2022-09-01 12:37:45.354963000 -04:00
+    :token_id: a4a80060-0c47-013b-5251-5ef7644c8070
+    :time_created: 2022-09-01 13:15:47.061373000 -04:00
     :email: andrewdev@gmail.com
-alla@gmail.com:
-  :password: "$2a$12$hkKe9GZskgIwT1.yxg0ESOZsJn1bFQJNl5/aO/oq8u2ukOtVpXSqC"
-  :session_id:
-    :token_id: f0287e10-0c29-013b-523a-5ef7644c8070
-    :time_created: 2022-09-01 09:43:08.830686000 -04:00
 tester@gmail.com:
   :password: "$2a$12$zkzWs9NyDfLLsksFXPzLSOywbWn0JMOPs/Tm/VnSJZmBbuvZaZjTC"
   :session_id:
-    :token_id: f0287e10-0c29-013b-523a-5ef7644c8070
-    :time_created: 2022-09-01 09:43:08.830686000 -04:00
+    :token_id: 0ec394c0-0c46-013b-5250-5ef7644c8070
+    :time_created: 2022-09-01 13:04:26.087146000 -04:00
+    :email: tester@gmail.com
 test1@gmail.com:
   :password: "$2a$12$WEbOJihGx.TAFEYrLxLXGO7MKR5AawiJ8bNCukLBUtbMruVziN9a."
   :session_id:
-    :token_id: 56e3a810-0c41-013b-5243-5ef7644c8070
-    :time_created: 2022-09-01 12:30:39.609661000 -04:00
+    :token_id: da392290-0c42-013b-5249-5ef7644c8070
+    :time_created: 2022-09-01 12:41:29.448114000 -04:00
+    :email: test1@gmail.com
+alla@gmail.com:
+  :password: "$2a$12$jAjXWCXA6TuVx46fQFvaheBC7aZNuJ2XYxeomIkZd5Suv5gVl8FD6"
+  :session_id:
+    :token_id: f2fbe1c0-0c48-013b-5252-5ef7644c8070
+    :time_created: 2022-09-01 13:25:07.970109000 -04:00
+    :email: alla@gmail.com
