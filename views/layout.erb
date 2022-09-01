@@ -21,6 +21,10 @@
       <% if session[:error] %>
         <p class='flash error'><%= session.delete(:error) %></p>
       <% end %>
+      <% if session[:token] %>
+        <p>User: <%= session[:token][:email]%></p>
+        <a href='/logout'>Logout</a>
+      <% end %>
     </header>
     <main>
       <%= yield %>

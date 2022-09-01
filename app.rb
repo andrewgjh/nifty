@@ -98,7 +98,7 @@ end
 
 def generate_sess_token
   token = UUID.new.generate
-  { token: token, time_created: Time.now }
+  { token_id: token, time_created: Time.now }
 end
 
 def active_token?(user)
@@ -107,15 +107,23 @@ def active_token?(user)
   Time.now < time_of_expire
 end
 
-def valid_token?
-  user = USERS.find do |_, sess|
-    sess[:session_id][:token] == session[:token][:token]
+def current_user 
+  USERS.find do |_, sess|
+    sess[:session_id][:token_id] == session[:token][:token_id]
   end
+end
+
+def valid_token?
+  user = current_user
   user && active_token?(user)
 end
 
 def logged_in?
-  return  if session.key?(:token) && valid_token?
+  session.key?(:token) && valid_token?
+end
+
+def login_only_route
+  return if logged_in?
 
   session[:error] = 'Please log in to assess this resource.'
   redirect '/login'
@@ -155,6 +163,7 @@ post '/login' do
   redirect '/login' unless validate_login(email, password)
 
   session_token = generate_sess_token
+  session_token[:email] = email
   USERS[email][:session_id] = session_token
   user_db_save
   session[:token] = session_token
@@ -168,13 +177,14 @@ post '/signup' do
 
   pw_digest = BCrypt::Password.create(password).to_s
   session_token = generate_sess_token
+  session_token[:email] = email
   USERS[email] = { password: pw_digest, session_id: session_token }
   user_db_save
   session[:token] = session_token
   redirect '/wishlist'
 end
 
-post '/logout' do
+get '/logout' do
   session.delete(:token)
 
   redirect '/'
@@ -185,7 +195,7 @@ get '/' do
 end
 
 get '/wishlist' do
-  logged_in?
+  login_only_route
 
   erb :wishlist
 end

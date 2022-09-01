@@ -15,3 +15,7 @@ const onDeleteItem = e => {
     }, 3000);
   });
 };
+
+const removeFlashMessage = ms => {
+  $("p.flash").delay(ms).slideUp();
+};
