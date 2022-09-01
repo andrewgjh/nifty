@@ -83,5 +83,3 @@ def scrape(url)
     :timeout_error
   end
 end
-
-p scrape('https://www.mec.ca/en/product/6009-278/airgrid-hike-short-sleeve-shirt?colour=Sea+Fog')

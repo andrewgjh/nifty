@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    bcrypt (3.1.18)
     erubis (2.7.0)
     httparty (0.20.0)
       mime-types (~> 3.0)
@@ -46,6 +47,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bcrypt (~> 3.1.12)
   erubis
   httparty
   minitest

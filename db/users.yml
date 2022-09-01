@@ -1,0 +1,16 @@
+---
+andrewdev@gmail.com:
+  :password: "$2a$12$N9y2lyHYCh4X66qaQP1pPuvgUnmcA/bqubax6BOhsUwQr75K5yt.C"
+  :session_id:
+    :token: 54a1c410-0c38-013b-523e-5ef7644c8070
+    :time_created: 2022-09-01 11:26:10.351833000 -04:00
+alla@gmail.com:
+  :password: "$2a$12$hkKe9GZskgIwT1.yxg0ESOZsJn1bFQJNl5/aO/oq8u2ukOtVpXSqC"
+  :session_id:
+    :token_id: f0287e10-0c29-013b-523a-5ef7644c8070
+    :time_created: 2022-09-01 09:43:08.830686000 -04:00
+tester@gmail.com:
+  :password: "$2a$12$zkzWs9NyDfLLsksFXPzLSOywbWn0JMOPs/Tm/VnSJZmBbuvZaZjTC"
+  :session_id:
+    :token_id: f0287e10-0c29-013b-523a-5ef7644c8070
+    :time_created: 2022-09-01 09:43:08.830686000 -04:00
