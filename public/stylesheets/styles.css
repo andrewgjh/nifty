@@ -2,6 +2,15 @@
 body {
   background-color: mintcream;
 }
+
+a, a:visited, a:active {
+  text-decoration: none;
+  color:#0074e4;
+}
+
+a:hover {
+  color:rgb(35, 38, 59);
+}
 .title {
   color:#7FBCD2;
   text-align: center;
@@ -37,6 +46,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 2em;
 }
 
 
@@ -144,4 +154,45 @@ body {
 .wishlist-search {
   text-align: center;
   font-family: "Alumni Sans Pinstripe";
+}
+
+.logo-link, .logo-link:active, .logo-link:link, .logo-link:visited{
+  text-decoration: none;
+}
+.logo-link:hover {
+  opacity: .8;
+}
+
+.auth-user-section{
+  padding: 0 3em;
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "Alumni Sans Pinstripe";
+  font-size: 2em;
+}
+
+.action-btn{
+
+  padding:.2em;
+  margin: 0 .2em;
+  border-radius: 10px;
+  transition: all .2s;
+}
+.action-btn:hover {
+  background-color: #d6d6e7;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.user-wishlist-bullet{
+  list-style-type: none;
+  padding: 1em 2em;
+  font-family: "Alumni Sans Pinstripe";
+  font-size: 2em;
+}
+
+.text{
+    font-family: "Alumni Sans Pinstripe";
+    font-size: 2em;
 }

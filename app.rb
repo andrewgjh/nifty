@@ -161,10 +161,15 @@ helpers do
 end
 
 get '/login' do
+  session[:error] = "You are already logged in as #{session[:token][:email]}."
+  redirect '/' if logged_in?
   erb :login
 end
 
+
 get '/signup' do
+  session[:error] = "You are already logged in as #{session[:token][:email]}."
+  redirect '/' if logged_in?
   erb :signup
 end
 
@@ -253,3 +258,4 @@ get '/wishlist/:item' do |item|
   @item = @wishlist[item]
   erb :wishlist_item
 end
+

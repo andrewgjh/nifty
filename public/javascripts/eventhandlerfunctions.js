@@ -30,12 +30,12 @@ const onWishListSearch = e => {
   });
   request.done(data => {
     if (data.length === 0) {
-      userSection.append("<p class='center'>No Users Found</p>");
+      userSection.append("<p class='center text'>No Users Found</p>");
     } else {
       userSection.append("<ul class='center users-list'></ul>");
       data.forEach(element => {
         $("ul.users-list").append(
-          `<li><a class='user-wishlist-link'>${element}</a></li>`
+          `<li class='user-wishlist-bullet action-btn'><a>${element}</a></li>`
         );
       });
     }
