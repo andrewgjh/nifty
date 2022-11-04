@@ -1,26 +1,6 @@
 ---
-6c7d75a0-0b8a-013b-522f-5ef7644c8070:
-  :title: BESTÅ TV unit with doors, white/Lappviken white, 707/8x161/2x15" (180x42x38
-    cm) - IKEA CA
-  :description: BESTÅ TV unit with doors, white/Lappviken white, 707/8x161/2x15" (180x42x38
-    cm) It’s not only the TV that’s smart! BESTÅ TV units combine contemporary good
-    looks with practical function. You get lots of storage space and relief from cables
-    that tend to get messy and gather dust.
-  :image_url: https://www.ikea.com/ca/en/images/products/besta-tv-unit-with-doors-white-lappviken-white__0719188_pe731908_s5.jpg
-  :price: "$265.00"
-  :original_url: https://www.ikea.com/ca/en/p/besta-tv-unit-with-doors-white-lappviken-white-s89330691/
-  :time_submitted: 2022-08-31T14:40
-78f9e240-3cdc-013b-045a-5ef7644c8071:
-  :title: MÖRBYLÅNGA Table, oak veneer brown stained, 55x33" (140x85 cm) - IKEA CA
-  :description: MÖRBYLÅNGA Table, oak veneer brown stained, 55x33" (140x85 cm) The
-    oak top layer enhances the plank feeling and details like the floating table top
-    and dovetail joints give the table a crafted look. A table full of character and
-    plenty of room for family and friends.
-  :image_url: https://www.ikea.com/ca/en/images/products/moerbylanga-table-oak-veneer-brown-stained__0737108_pe740890_s5.jpg
-  :price: "$699.00"
-  :original_url: https://www.ikea.com/ca/en/p/moerbylanga-table-oak-veneer-brown-stained-50386245/
-  :time_submitted: 2022-11-02 09:02:04.602273000 -04:00
 8031b070-3d0f-013b-045c-5ef7644c8071:
+  :id: 8031b070-3d0f-013b-045c-5ef7644c8071
   :title: IKEA 365+ Frying pan, stainless steel/non-stick coating, 11" (28 cm) - IKEA
     CA
   :description: IKEA 365+ Frying pan, stainless steel/non-stick coating, 11" (28 cm)
@@ -31,3 +11,65 @@
   :price: "$19.99"
   :original_url: https://www.ikea.com/ca/en/p/ikea-365-frying-pan-stainless-steel-non-stick-coating-30484690/
   :time_submitted: 2022-11-02 15:07:20.985549000 -04:00
+97b07e00-3e86-013b-046b-5ef7644c8071:
+  :title: Constable Canard - Officially Licensed RCMP Duck -Le Petit Duck Shoppe -
+    Le Petit Duck Shoppe - Canada's Largest Selection of Collectible & Character Rubber
+    Ducks
+  :description: Constable Canard - The Officially Licensed RCMP Mountie Rubber Duck
+  :image_url: https://cdn.shoplightspeed.com/shops/638694/files/46990577/constable-canard-the-officially-licensed-rcmp-moun.jpg
+  :price: '0'
+  :original_url: https://www.lepetitduckshoppe.com/en/officially-licensed-rcmp-duck-51691807.html?source=googlebase&gclid=CjwKCAjw8JKbBhBYEiwAs3sxN498g8AJN-alFDObGwNWsCzG8W_NHFOEGZBfbGDJ880jXdhPfmbl3BoC9W0QAvD_BwE
+  :time_submitted: 2022-11-04 11:52:21.738156000 -04:00
+  :id: 97b07e00-3e86-013b-046b-5ef7644c8071
+ac637d70-3e86-013b-046c-5ef7644c8071:
+  :title: 60" x 32" Bathroom mirror with black aluminum frame | Bath Depot
+  :description: Find everything you need for your bathroom at amazing prices! Choose
+    from our large selection of framed mirrors to find one with just the right size
+    and finish to complement your bathroom furniture.
+  :image_url: https://www.baindepot.com/media/catalog/product/M/1/M15079BK_52ae.jpg?quality=80&fit=bounds&height=285&width=285&canvas=285:285
+  :price: "$279"
+  :original_url: https://www.bathdepot.ca/en/60in-x-32in-bathroom-mirror-with-black-aluminum-frame-m15079bk.html?ff=33&fp=8305
+  :time_submitted: 2022-11-04 11:52:56.460362000 -04:00
+  :id: ac637d70-3e86-013b-046c-5ef7644c8071
+5b430be0-3e8a-013b-0471-5ef7644c8071:
+  :title: Ledger Nano X | Ledger
+  :description: Make sure your crypto assets are safe anywhere you go with our most
+    advanced hardware wallet yet. The Ledger Nano X is a bluetooth enabled secure
+    device that offers an extensive capacity and an easy-to-use experience for crypto
+    owners.
+  :image_url: https://cdn.shopify.com/s/files/1/2974/4858/products/Ledger_Nano_X_Onyx_Black_200x.png?v=1658828796
+  :price: '39'
+  :original_url: https://shop.ledger.com/products/ledger-nano-x?flow_country=CAN&gclid=CjwKCAjw8JKbBhBYEiwAs3sxNwBP7_h-DLM_76-YBVH7Iw7_jl-XmLoHxKmwJyMyXw7hZm0DKkkxDxoC424QAvD_BwE
+  :time_submitted: 2022-11-04 12:19:18.345255000 -04:00
+  :id: 5b430be0-3e8a-013b-0471-5ef7644c8071
+b7b747d0-3e9d-013b-0474-5ef7644c8071:
+  :title: Harry Potter And The Order Of The Phoenix, Book by J.K. Rowling (Hardcover)
+    | www.chapters.indigo.ca
+  :description: Buy the Hardcover Book Harry Potter And The Order Of The Phoenix by
+    J.K. Rowling at Indigo.ca, Canada's largest bookstore. Free shipping and pickup
+    in store on eligible orders.
+  :image_url: https://dynamic.indigoimages.ca/v1/books/books/1408845687/1.jpg?quality=85&width=380&maxheight=515&sale=25
+  :price: "$50.00"
+  :original_url: https://www.chapters.indigo.ca/en-ca/books/product/9781408845684-item.html
+  :time_submitted: 2022-11-04 14:37:53.868772000 -04:00
+  :id: b7b747d0-3e9d-013b-0474-5ef7644c8071
+10696520-3ea1-013b-0477-5ef7644c8071:
+  :title: WATCH IT! Casio Edifice | EFSS600D-1A4V – WATCH IT! Canada
+  :description: WATCH IT! is your leading authorized retailer of Casio watches in
+    Canada. Shop online with Free Returns or at a location near you!
+  :image_url: http://cdn.shopify.com/s/files/1/0019/4471/5373/products/EFSS600D1A4V_large_16627297-f0fe-40ea-b17b-4ec575e30ce9_grande.png?v=1637783477
+  :price: '270.00'
+  :original_url: https://www.watchit.ca/collections/casio-edifice-mens/products/casio-edifice-efss600d1a4v
+  :time_submitted: Nov 04, 2022
+  :id: 10696520-3ea1-013b-0477-5ef7644c8071
+890b3a70-3ea4-013b-0481-5ef7644c8071:
+  :title: Buy Anita's Organic Mill Stone Ground Whole Wheat Flour at Well.ca | Free
+    Shipping $49+ in Canada
+  :description: 'Anita''s Organic Mill Stone Ground Whole Wheat Flour - Anita''s Whole
+    wheat flour is stone milled from hard red spring wheat kernels grown in Western
+    Canada '
+  :image_url: https://dr9wvh6oz7mzp.cloudfront.net/i/420b37294d65b81112f1926e0e79b921_ra,w403,h806_pa,w403,h806.jpg
+  :price: '11.5900'
+  :original_url: https://well.ca/products/anitas-organic-mill-stone-ground_124496.html?gclid=CjwKCAjw8JKbBhBYEiwAs3sxN-HlvNUGDmtXhkg71QnG5qWlIhYOydDYcN4NfLuG58tgmdS09aI5WRoCxEoQAvD_BwE
+  :time_submitted: Nov 04, 2022
+  :id: 890b3a70-3ea4-013b-0481-5ef7644c8071

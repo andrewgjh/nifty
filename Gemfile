@@ -13,3 +13,4 @@ gem 'uuid'
 
 gem 'httparty'
 gem 'nokogiri'
+gem 'firebase', '~> 0.2.6'

@@ -8,14 +8,17 @@
   <% @wishlist.each do |id, item| %>
     <article id='<%= id %>' class='wishlist-item-container'>
       <div class='wishlist-item-container-left'> 
-        <h2><%= h(item[:title]) %></h2>
+          <h2><a href='/wishlist/<%= @user[0] %>/<%= id %>'>   <%= h(item[:title]) %></a></h2>
+        
         <p><%= h(item[:description]) %></p>
+
+      <img id='delete--<%= id %>' class='icon delete' src="/images/trash-can.png" />
       </div>
       <div class='wishlist-item-container-right'>
         <p class='item_price'><%= h(item[:price]) %></p>
         <img class='item_img' src="<%= item[:image_url] %>">
-        <img id='delete--<%= id %>' class='icon delete' src="/images/trash-can.png" />
-        <a href='/wishlist/<%= id %>'>More Details</a>   
+        
+    
       </div>
     </article>
   <% end %>

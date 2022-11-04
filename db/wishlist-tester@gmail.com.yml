@@ -1,5 +1,6 @@
 ---
 00af6d60-0c46-013b-524e-5ef7644c8070:
+  :id: 00af6d60-0c46-013b-524e-5ef7644c8070
   :title: Footstools - Eden ottoman - BoConcept
   :description: Bring exciting colors, textures, and functionality to your space with
     the Eden pouf. The organic shape brings a soft and stylish feel to any room while
@@ -9,7 +10,9 @@
   :price: '899.00'
   :original_url: https://www.boconcept.com/en-ca/eden/498690603091.html
   :time_submitted: 2022-09-01 13:04:02.466318000 -04:00
+  :claimed_by: andrewdev@gmail.com
 8c7f6c30-0c51-013b-5255-5ef7644c8070:
+  :id: 8c7f6c30-0c51-013b-5255-5ef7644c8070
   :title: Lemon Ginger Rooibos - Genuine Tea
   :description: This South African red bush tea is perfect for those who want to unwind
     after a long day. With a burst of citrus and a smooth gingery finish, this tea
@@ -20,3 +23,4 @@
   :price: '9.95'
   :original_url: https://www.genuinetea.ca/collections/caffeine-free/products/lemon-ginger-rooibos
   :time_submitted: 2022-09-01 14:26:41.496512000 -04:00
+  :claimed_by: andrewdev@gmail.com

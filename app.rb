@@ -55,10 +55,13 @@ def create(input, wishlist)
   else
     data = { title: input }
   end
-  data[:time_submitted] = Time.now
-  wishlist[UUID.new.generate] = data
+  data[:time_submitted] = Time.now.strftime("%b %d, %Y")
+  unique_id = UUID.new.generate
+  data[:id] = unique_id
+  wishlist[unique_id] = data
 end
 
+#fb
 def unique?(email)
   USERS.none? { |k, _| k == email }
 end
@@ -67,6 +70,7 @@ def good?(password)
   session[:error] = 'The password needs to be minimum 5 characters long.' unless password.length >= 5
   password.length >= 5
 end
+
 
 def db_has_user?(email)
   USERS.any? { |k, _| k == email }
@@ -114,6 +118,7 @@ def active_token?(user)
 end
 
 def current_user 
+  return nil unless session[:token]
   USERS.find do |_, sess|
     sess[:session_id][:token_id] == session[:token][:token_id]
   end
@@ -142,7 +147,16 @@ def search_for_user(possible_user)
 end
 
 def load_wishlist(email)
-  YAML.load_file(File.join(__dir__, "/db/wishlist-#{email}.yml"))
+  list = YAML.load_file(File.join(__dir__, "/db/wishlist-#{email}.yml"))
+end
+
+def claim_item(signedin_user, list_user, item_id)
+  wishlist = load_wishlist(list_user)
+  unless wishlist[item_id][:claimed_by]
+    wishlist[item_id][:claimed_by] = signedin_user
+  end
+  db_save(wishlist, list_user)
+  true
 end
 
 configure do
@@ -158,18 +172,23 @@ helpers do
   def hattr(text)
     Rack::Utils.escape_path(text)
   end
+
 end
 
 get '/login' do
-  session[:error] = "You are already logged in as #{session[:token][:email]}."
-  redirect '/' if logged_in?
+  if logged_in?
+    session[:error] = "You are already logged in as #{session[:token][:email]}."
+    redirect '/' 
+  end
   erb :login
 end
 
 
 get '/signup' do
-  session[:error] = "You are already logged in as #{session[:token][:email]}."
-  redirect '/' if logged_in?
+  if logged_in?
+    session[:error] = "You are already logged in as #{session[:token][:email]}."
+    redirect '/' 
+  end
   erb :signup
 end
 
@@ -213,9 +232,10 @@ get '/' do
 end
 
 get '/wishlist' do
+  p session[:token]
   loggedin_only
-  user = current_user
-  @wishlist = load_wishlist(user[0])
+  @user = current_user
+  @wishlist = load_wishlist(@user[0])
   erb :wishlist
 end
 
@@ -251,11 +271,18 @@ post '/wishlist/new' do
   redirect '/wishlist'
 end
 
-get '/wishlist/:item' do |item|
-  loggedin_only
-  user = current_user
-  @wishlist = load_wishlist(user[0])
+get '/wishlist/:user/:item' do |user, item|
+  @wishlist = load_wishlist(user)
   @item = @wishlist[item]
+  @user = user
+  @signedin_user_email = current_user&.first
   erb :wishlist_item
 end
 
+post '/wishlist/claim-item' do 
+  current_user = params[:current_user]
+  list_item_user = params[:list_item_user]
+  item_id = params[:item_id]
+  claim_item(current_user, list_item_user, item_id) 
+  status 201
+end

@@ -52,16 +52,19 @@ const onUserLinkClick = e => {
       url: `/wishlists/user/${email}`,
     });
     request.done(data => {
+      if (Object.values(data).length === 0) {
+        userSection.append("<p>No Items in this User's Wishlist</p>");
+      }
       Object.values(data).forEach(el => {
         userSection.append(`<article class='wishlist-item-container'>
       <div class='wishlist-item-container-left'> 
-        <h2>${el.title}</h2>
+        <h2><a href="${el.original_url}" target="_blank" rel="noopener noreferrer">${el.title}</a></h2>
         <p>${el.description}</p>
       </div>
       <div class='wishlist-item-container-right'>
         <p class='item_price'>${el.price}</p>
         <img class='item_img' src="${el.image_url}">
-        <a href='/wishlist/<%= id %>'>More Details</a>   
+        <a href='/wishlist/${email}/${el.id}'>More Details</a>   
       </div>
     </article>`);
       });
@@ -69,9 +72,40 @@ const onUserLinkClick = e => {
   }
 };
 
-const createFlashMessage = msg => {
-  $("header").append(`<p class='flash message'>${msg}</p>`);
+const createFlashMessage = (msg, msgType = "message") => {
+  $("header").append(`<p class='flash ${msgType}'>${msg}</p>`);
   setTimeout(function () {
     $("p.flash").slideUp();
   }, 3000);
+};
+
+const onClaimFormSubmit = e => {
+  e.preventDefault();
+  const [current_user, list_item_user, item_id] =
+    e.target.elements[0].value.split("--");
+  if (!current_user) {
+    createFlashMessage(
+      "Please sign in to claim other users' wishlist items.",
+      "error"
+    );
+    return;
+  }
+  if (current_user === list_item_user) {
+    createFlashMessage("You cannot claim your own wishlist items.", "error");
+    return;
+  }
+  const payload = { current_user, list_item_user, item_id };
+  const request = $.ajax({
+    method: "post",
+    url: `/wishlist/claim-item`,
+    data: payload,
+  });
+  request.done((data, textStatus, xhr) => {
+    if (xhr.status === 201) {
+      $("form.claim-form").remove();
+      $("div.claim-container")
+        .append(`<img class='claimed-img' src='/images/accept.png' />
+    <span>Claimed</span>`);
+    }
+  });
 };
