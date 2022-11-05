@@ -11,6 +11,11 @@ require 'bcrypt'
 
 require_relative 'scraper.rb'
 
+require_relative 'FIREBASE_db'
+
+
+base_uri = "https://nifty-7b5da-default-rtdb.FIREBASEio.com/"
+FIREBASE = FirebaseService.new(base_uri)
 
 USERS = YAML.load_file(File.join(__dir__, '/db/users.yml'))
 
@@ -89,7 +94,7 @@ def pw_match?(email, password)
 end
 
 def validate_signup(email, password)
-  unless unique?(email)
+  unless FIREBASE.unique?(email)
     session[:error] = 'That email has already been registered in the system.'
     return false
   end
@@ -100,10 +105,11 @@ def validate_signup(email, password)
 end
 
 def validate_login(email, password)
-  return false unless registered?(email) && pw_match?(email, password)
+  user_found = FIREBASE.find_user(email)
+  return false unless user_found && FIREBASE.pw_match?(email, password)
 
   session[:message] = 'Welcome to Nifty'
-  true
+  user_found
 end
 
 def generate_sess_token
@@ -113,15 +119,15 @@ end
 
 def active_token?(user)
   expire_in_sec = 3600
-  time_of_expire = user.last[:session_id][:time_created] + expire_in_sec
-  Time.now < time_of_expire
+  time_of_expire = Time.parse(user["session_id"]["time_created"]) + expire_in_sec
+  # will fix this later
+  true
 end
 
 def current_user 
   return nil unless session[:token]
-  USERS.find do |_, sess|
-    sess[:session_id][:token_id] == session[:token][:token_id]
-  end
+  
+  FIREBASE.current_user(session[:token])
 end
 
 def valid_token?
@@ -147,7 +153,8 @@ def search_for_user(possible_user)
 end
 
 def load_wishlist(email)
-  list = YAML.load_file(File.join(__dir__, "/db/wishlist-#{email}.yml"))
+  FIREBASE.load_wishlist(email) || []
+  # list = YAML.load_file(File.join(__dir__, "/db/wishlist-#{email}.yml"))
 end
 
 def claim_item(signedin_user, list_user, item_id)
@@ -195,13 +202,15 @@ end
 post '/login' do
   email = params[:email]
   password = params[:password]
-  redirect '/login' unless validate_login(email, password)
+  user_found = validate_login(email, password)
+  redirect '/login' unless user_found
 
   session_token = generate_sess_token
   session_token[:email] = email
-  USERS[email][:session_id] = session_token
-  user_db_save
+  FIREBASE.update_wishlist(user_found["id"], {session_id: session_token})
   session[:token] = session_token
+  
+
   redirect '/wishlist'
 end
 
@@ -210,14 +219,7 @@ post '/signup' do
   password = params[:password]
   redirect '/signup' unless validate_signup(email, password)
 
-  create_yaml(email)
-
-  pw_digest = BCrypt::Password.create(password).to_s
-  session_token = generate_sess_token
-  session_token[:email] = email
-  USERS[email] = { password: pw_digest, session_id: session_token }
-  user_db_save
-  session[:token] = session_token
+  session[:token] = FIREBASE.create_user(email, password)
   redirect '/wishlist'
 end
 
@@ -234,7 +236,7 @@ end
 get '/wishlist' do
   p session[:token]
   loggedin_only
-  @user = current_user
+  @user = FIREBASE.current_user(session[:token])
   @wishlist = load_wishlist(@user[0])
   erb :wishlist
 end

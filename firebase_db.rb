@@ -24,6 +24,7 @@ class FirebaseService
     response = @firebase.push("users", { email: email, password: pw_digest, session_id: session_token })
 
     @firebase.update("users/#{response.body["name"]}", { user_id:  response.body["name"]})
+    session_token
   end
 
   def find_user(email)
@@ -55,17 +56,25 @@ class FirebaseService
     @firebase.push("#{email}-wishlist", data)
   end
 
+  def load_wishlist(email)
+    @firebase.get("#{email}-wishlist").body
+  end
+
+  def update_wishlist(user_id, data)
+    @firebase.update("users/#{user_id}", data)
+  end
 
 
 end
 
-# fb_service = FirebaseService.new(base_uri)
+fb_service = FirebaseService.new(base_uri)
 
-# fb_service.create_user('testemiall@gmail.com', 'testing123456!!')
+# fb_service.create_user('andrew@gmail.com', 'testing123456!!')
 
 # p fb_service.find_user('testemiall@gmail.com')
 
 # p fb_service.pw_match?('testemiall@gmail.com', 'testing123456!!')
+# p Firebase::Client.new(base_uri).get("users").body
 
   # :title: 
   # :description:
