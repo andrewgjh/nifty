@@ -207,7 +207,8 @@ post '/login' do
 
   session_token = generate_sess_token
   session_token[:email] = email
-  FIREBASE.update_wishlist(user_found["id"], {session_id: session_token})
+  
+  FIREBASE.update_wishlist(user_found["user_id"], {session_id: session_token})
   session[:token] = session_token
   
 
