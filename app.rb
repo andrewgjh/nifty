@@ -47,9 +47,6 @@ def create(input, user_id, owner_email)
 end
 
 
-# def unique?(email)
-#   USERS.none? { |k, _| k == email }
-# end
 
 def good?(password)
   session[:error] = 'The password needs to be minimum 5 characters long.' unless password.length >= 5
@@ -57,21 +54,12 @@ def good?(password)
 end
 
 
-# def db_has_user?(email)
-#   USERS.any? { |k, _| k == email }
-# end
-
 def registered?(email)
   registered_user = db_has_user?(email)
   session[:error] = 'This user has not been registered.' unless registered_user
   registered_user
 end
 
-# def pw_match?(email, password)
-#   hsh_pw = BCrypt::Password.new(USERS[email][:password])
-#   session[:error] = 'The password is incorrect' unless hsh_pw == password
-#   hsh_pw == password
-# end
 
 def validate_signup(email, password)
   unless FIREBASE.unique?(email)

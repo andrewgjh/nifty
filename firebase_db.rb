@@ -93,19 +93,3 @@ class FirebaseService
   end
 
 end
-
-# fb_service = FirebaseService.new(base_uri)
-
-# fb_service.create_user('andrew@gmail.com', 'testing123456!!')
-
-# p fb_service.find_user('testemiall@gmail.com')
-
-# p fb_service.pw_match?('testemiall@gmail.com', 'testing123456!!')
-# p Firebase::Client.new(base_uri).get("users").body
-
-  # :title: 
-  # :description:
-  # :image_url: 
-  # :price: 
-  # :original_url: 
-  # :time_submitted: 
