@@ -11,31 +11,11 @@ require 'bcrypt'
 
 require_relative 'scraper.rb'
 
-require_relative 'FIREBASE_db'
+require_relative 'firebase_db.rb'
 
 
-base_uri = "https://nifty-7b5da-default-rtdb.FIREBASEio.com/"
-FIREBASE = FirebaseService.new(base_uri)
+FIREBASE = FirebaseService.new()
 
-USERS = YAML.load_file(File.join(__dir__, '/db/users.yml'))
-
-def db_save(wishlist, usr_email)
-  File.open(File.join(__dir__, "/db/wishlist-#{usr_email}.yml"), 'w') do |file|
-    YAML.dump(wishlist, file)
-  end
-end
-
-def user_db_save
-  File.open(File.join(__dir__, '/db/users.yml'), 'w') do |file|
-    YAML.dump(USERS, file)
-  end
-end
-
-def create_yaml(usr_email)
-   File.open(File.join(__dir__, "/db/wishlist-#{usr_email}.yml"), 'w') do |file|
-    YAML.dump({}, file)
-  end
-end
 
 def validate(input)
   return unless input.strip.empty?
@@ -49,27 +29,27 @@ def url?(input)
   !!a_url
 end
 
-def create(input, wishlist)
+def create(input, user_id, owner_email)
   if url?(input)
-    data = scrape(input)
-    if data == :timeout_error
+    payload = scrape(input)
+    if payload == :timeout_error
       session[:error] = 'Unable to retrieve url information, please submit information manually.'
       return false
     end
-    data[:original_url] = input
+    payload[:original_url] = input
+    payload[:belongs_to] = user_id
+    payload[:belongs_to_email] = owner_email
   else
-    data = { title: input }
+    payload = { title: input, belongs_to: user_id , belongs_to_email: owner_email}
   end
-  data[:time_submitted] = Time.now.strftime("%b %d, %Y")
-  unique_id = UUID.new.generate
-  data[:id] = unique_id
-  wishlist[unique_id] = data
+  payload[:time_submitted] = Time.now.strftime("%b %d, %Y")
+  FIREBASE.add_to_wishlist(payload, user_id)
 end
 
-#fb
-def unique?(email)
-  USERS.none? { |k, _| k == email }
-end
+
+# def unique?(email)
+#   USERS.none? { |k, _| k == email }
+# end
 
 def good?(password)
   session[:error] = 'The password needs to be minimum 5 characters long.' unless password.length >= 5
@@ -77,9 +57,9 @@ def good?(password)
 end
 
 
-def db_has_user?(email)
-  USERS.any? { |k, _| k == email }
-end
+# def db_has_user?(email)
+#   USERS.any? { |k, _| k == email }
+# end
 
 def registered?(email)
   registered_user = db_has_user?(email)
@@ -87,11 +67,11 @@ def registered?(email)
   registered_user
 end
 
-def pw_match?(email, password)
-  hsh_pw = BCrypt::Password.new(USERS[email][:password])
-  session[:error] = 'The password is incorrect' unless hsh_pw == password
-  hsh_pw == password
-end
+# def pw_match?(email, password)
+#   hsh_pw = BCrypt::Password.new(USERS[email][:password])
+#   session[:error] = 'The password is incorrect' unless hsh_pw == password
+#   hsh_pw == password
+# end
 
 def validate_signup(email, password)
   unless FIREBASE.unique?(email)
@@ -105,8 +85,14 @@ def validate_signup(email, password)
 end
 
 def validate_login(email, password)
-  user_found = FIREBASE.find_user(email)
-  return false unless user_found && FIREBASE.pw_match?(email, password)
+  user_found = FIREBASE.get_user(email)
+  matching_password = FIREBASE.pw_match?(email, password)
+  session[:error] = 'This email is not registered in our database' unless user_found
+  if user_found
+    session[:error] = 'The password does not match our records.' unless matching_password
+  end
+
+  return false unless user_found && matching_password
 
   session[:message] = 'Welcome to Nifty'
   user_found
@@ -120,8 +106,7 @@ end
 def active_token?(user)
   expire_in_sec = 3600
   time_of_expire = Time.parse(user["session_id"]["time_created"]) + expire_in_sec
-  # will fix this later
-  true
+  p (time_of_expire > Time.now)
 end
 
 def current_user 
@@ -147,24 +132,14 @@ def loggedin_only
 end
 
 def search_for_user(possible_user)
-  results = USERS.select do |email, _|
-              email.match(possible_user)
-            end.keys
+  possible_user_arr = FIREBASE.find_user(possible_user)
 end
 
-def load_wishlist(email)
-  FIREBASE.load_wishlist(email) || []
-  # list = YAML.load_file(File.join(__dir__, "/db/wishlist-#{email}.yml"))
+def load_wishlist(usr_id)
+  FIREBASE.load_wishlist(usr_id) || []
 end
 
-def claim_item(signedin_user, list_user, item_id)
-  wishlist = load_wishlist(list_user)
-  unless wishlist[item_id][:claimed_by]
-    wishlist[item_id][:claimed_by] = signedin_user
-  end
-  db_save(wishlist, list_user)
-  true
-end
+
 
 configure do
   enable :sessions
@@ -203,15 +178,15 @@ post '/login' do
   email = params[:email]
   password = params[:password]
   user_found = validate_login(email, password)
+  p ['fjkdlsjfds', user_found]
   redirect '/login' unless user_found
 
   session_token = generate_sess_token
   session_token[:email] = email
   
-  FIREBASE.update_wishlist(user_found["user_id"], {session_id: session_token})
+  FIREBASE.update_user_session(user_found["user_id"], {session_id: session_token})
   session[:token] = session_token
   
-
   redirect '/wishlist'
 end
 
@@ -235,57 +210,55 @@ get '/' do
 end
 
 get '/wishlist' do
-  p session[:token]
   loggedin_only
   @user = FIREBASE.current_user(session[:token])
-  @wishlist = load_wishlist(@user[0])
+  
+  @wishlist = load_wishlist(@user['user_id'])
+  p ['wishlist', @wishlist]
   erb :wishlist
 end
 
-get '/wishlists/user/:email' do |email|
-  @wishlist = load_wishlist(email)
+get '/wishlists/user/:user_id' do |user_id|
+  @wishlist = load_wishlist(user_id)
   json @wishlist
 end
 
 get '/wishlist/search' do 
   possible_user = params[:email]
+  
   json search_for_user(possible_user)
 end
 
 delete '/wishlist/:id' do |id|
   loggedin_only
   user = current_user
-  @wishlist = load_wishlist(user[0])
-
-  @wishlist.delete(id)
-  db_save(@wishlist, user[0])
+  FIREBASE.delete_item(user['user_id'], id)
   status 204
 end
 
 post '/wishlist/new' do
   loggedin_only
   user = current_user
-  @wishlist = load_wishlist(user[0])
+  @wishlist = load_wishlist(user['user_id'])
   entry = params[:wishlist_item]
-  if create(entry, @wishlist)
+  
+  if create(entry, user['user_id'], user['email'])
     session[:message] = 'The item was successfully added!'
-    db_save(@wishlist, user[0])
   end
   redirect '/wishlist'
 end
 
-get '/wishlist/:user/:item' do |user, item|
-  @wishlist = load_wishlist(user)
-  @item = @wishlist[item]
-  @user = user
-  @signedin_user_email = current_user&.first
+get '/wishlist/:userId/:itemId' do |userId, itemId|
+  @item = FIREBASE.get_item_details(userId, itemId)
+  @user = current_user
+
   erb :wishlist_item
 end
 
 post '/wishlist/claim-item' do 
-  current_user = params[:current_user]
-  list_item_user = params[:list_item_user]
+  current_user_id = params[:current_user_id]
+  list_item_user_id = params[:list_item_user_id]
   item_id = params[:item_id]
-  claim_item(current_user, list_item_user, item_id) 
+  FIREBASE.claim_item(current_user_id, list_item_user_id, item_id) 
   status 201
 end

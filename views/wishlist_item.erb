@@ -1,20 +1,20 @@
 <section class='wishlist-detail-section'>
-  <img class='wishlist-item-img' src="<%= h(@item[:image_url])%>"/>
-  <p><strong>Item Name: </strong><%= h(@item[:title]) %></p>
-  <p><strong>Belongs to the List of:</strong> <%= @user %></p>
-  <p><strong>Added:</strong> <%= @item[:time_submitted] %></p>
+  <img class='wishlist-item-img' src="<%= h(@item["image_url"])%>"/>
+  <p><strong>Item Name: </strong><%= h(@item["title"]) %></p>
+  <p><strong>Belongs to the List of:</strong> <%= @item["belongs_to_email"] %></p>
+  <p><strong>Added:</strong> <%= @item["time_submitted"] %></p>
     <div class='claim-container'>
-  <% if @item[:claimed_by] %>
+  <% if @item["claimed_by"] %>
     <img class='claimed-img' src='/images/accept.png'>
     <span>Claimed</span>
    
     <% else %>
       <form class='claim-form'>
-        <input type='hidden' value='<%= @signedin_user_email %>--<%= @user %>--<%= @item[:id] %>'> 
+        <input type='hidden' value='<%= @user['user_id'] %>--<%= @item['belongs_to'] %>--<%= @item['item_id'] %>'> 
         <button type='submit' class='claim-form-btn'>I will buy this wishlist item</button>
       </form>
   
   <% end %>
    </div>
-  <a href='<%= h(@item[:original_url]) %>' target='_blank' rel="noopener noreferrer">Bring Me to the Site</a>
+  <a href='<%= h(@item["original_url"]) %>' target='_blank' rel="noopener noreferrer">Bring Me to the Site</a>
 </section>

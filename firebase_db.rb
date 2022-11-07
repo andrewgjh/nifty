@@ -6,8 +6,8 @@ base_uri = "https://nifty-7b5da-default-rtdb.firebaseio.com/"
 
 
 class FirebaseService 
-  def initialize(base_uri)
-    @base_uri = base_uri
+  def initialize
+    @base_uri = "https://nifty-7b5da-default-rtdb.firebaseio.com/"
     @firebase = Firebase::Client.new(@base_uri)
   end
 
@@ -27,47 +27,74 @@ class FirebaseService
     session_token
   end
 
-  def find_user(email)
+  def find_user(query)
     users = @firebase.get("users")
-    users.body.values.find do |account|
-      account['email'] == email
+    possibleUsers = users.body.values.select do |account|
+      account['email'].include? query
     end
+    possibleUsers.map {|acc| {email: acc['email'], user_id: acc['user_id']}}
   end
+  
 
   def pw_match?(email, password)
-    db_password = find_user(email)["password"]
+    user = get_user(email)
+    return false unless user
+    db_password = user["password"]
     BCrypt::Password.new(db_password) == password
   end
 
   def unique?(email)
-    @firebase.get('users').body.values.none? do |account| 
+    user_db = @firebase.get('users').body
+    return true unless user_db
+    user_db.values.none? do |account| 
       account['email'] == email 
     end
   end
 
   def current_user(token)
-    return nil unless token
-    @firebase.get('users').body.values.find do |account|
-      account["session_id"]["token_id"] = token[:token_id]
+    user = @firebase.get('users').body.values.find do |account|
+      account['session_id']['token_id'] == token[:token_id] 
     end
   end
 
-  def add_to_wishlist(data, email)
-    @firebase.push("#{email}-wishlist", data)
+  def add_to_wishlist(data, user_id)
+    response = @firebase.push("#{user_id}-wishlist", data)
+    @firebase.update("#{user_id}-wishlist/#{response.body["name"]}", { item_id:  response.body["name"]})
   end
 
-  def load_wishlist(email)
-    @firebase.get("#{email}-wishlist").body
+  def delete_item(user_id, item_id)
+    @firebase.delete("#{user_id}-wishlist/#{item_id}")
   end
 
-  def update_wishlist(user_id, data)
-    @firebase.update("users/#{user_id}", data)
+  def load_wishlist(user_id)
+    wishlist = @firebase.get("#{user_id}-wishlist").body
+    return nil unless wishlist
+    return wishlist.values
   end
 
+  def update_user_session(user_id, session)
+    @firebase.update("users/#{user_id}", session)
+  end
+
+  def get_item_details(user_id, item_id) 
+    @firebase.get("#{user_id}-wishlist/#{item_id}").body
+  end
+
+  def claim_item(current_user_id, list_item_user_id, item_id) 
+    current_user_email = @firebase.get("users/#{current_user_id}").body['email']
+    @firebase.update("#{list_item_user_id}-wishlist/#{item_id}", {claimed_by: {user_id: current_user_id, email: current_user_email }})
+  end
+
+   
+  def get_user(email)
+    @firebase.get('users').body.values.find do |account|
+      account['email'] == email
+    end
+  end
 
 end
 
-fb_service = FirebaseService.new(base_uri)
+# fb_service = FirebaseService.new(base_uri)
 
 # fb_service.create_user('andrew@gmail.com', 'testing123456!!')
 
