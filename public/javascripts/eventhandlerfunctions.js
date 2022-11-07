@@ -1,6 +1,7 @@
 const onDeleteItem = e => {
   const button_id = e.target.id;
-  const item_id = button_id.split("--")[1];
+  const item_id = button_id.split("__")[1];
+  console.log(button_id, item_id);
   const request = $.ajax({
     method: "delete",
     url: `/wishlist/${item_id}`,
@@ -24,6 +25,7 @@ const onWishListSearch = e => {
     createFlashMessage("Searches cannot be blank.");
     return;
   }
+ 
   const request = $.ajax({
     method: "get",
     url: `/wishlist/search?email=${searchEmail}`,
@@ -35,7 +37,7 @@ const onWishListSearch = e => {
       userSection.append("<ul class='center users-list'></ul>");
       data.forEach(element => {
         $("ul.users-list").append(
-          `<li class='user-wishlist-bullet action-btn'><a>${element}</a></li>`
+          `<li class='user-wishlist-bullet action-btn'><a id='userquery___${element.user_id}'>${element.email}</a></li>`
         );
       });
     }
@@ -46,10 +48,11 @@ const onUserLinkClick = e => {
   if (e.target.tagName === "A") {
     const userSection = $("section.found-users");
     userSection.empty();
-    const email = e.target.innerHTML;
+    const userId = e.target.id.split("___")[1];
+
     const request = $.ajax({
       method: "get",
-      url: `/wishlists/user/${email}`,
+      url: `/wishlists/user/${userId}`,
     });
     request.done(data => {
       if (Object.values(data).length === 0) {
@@ -64,7 +67,7 @@ const onUserLinkClick = e => {
       <div class='wishlist-item-container-right'>
         <p class='item_price'>${el.price}</p>
         <img class='item_img' src="${el.image_url}">
-        <a href='/wishlist/${email}/${el.id}'>More Details</a>   
+        <a href='/wishlist/${el.belongs_to}/${el.item_id}'>More Details</a>   
       </div>
     </article>`);
       });
@@ -81,20 +84,25 @@ const createFlashMessage = (msg, msgType = "message") => {
 
 const onClaimFormSubmit = e => {
   e.preventDefault();
-  const [current_user, list_item_user, item_id] =
+  const [current_user_id, list_item_user_id, item_id] =
     e.target.elements[0].value.split("--");
-  if (!current_user) {
+  console.log(current_user_id, list_item_user_id, item_id);
+  if (!current_user_id) {
     createFlashMessage(
       "Please sign in to claim other users' wishlist items.",
       "error"
     );
     return;
   }
-  if (current_user === list_item_user) {
+  if (current_user_id === list_item_user_id) {
     createFlashMessage("You cannot claim your own wishlist items.", "error");
     return;
   }
-  const payload = { current_user, list_item_user, item_id };
+  const payload = {
+    current_user_id,
+    list_item_user_id,
+    item_id,
+  };
   const request = $.ajax({
     method: "post",
     url: `/wishlist/claim-item`,

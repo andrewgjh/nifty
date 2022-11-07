@@ -5,18 +5,21 @@
 
 <section class='current_list_container'>
   <h2>Your WishList</h2>
-  <% @wishlist.each do |id, item| %>
-    <article id='<%= id %>' class='wishlist-item-container'>
+  <% if @wishlist.empty? %>
+    <p class='not-available'>No items in your Wishlist</p>
+  <% end %>
+  <% @wishlist.each do |product| %>
+    <article id='<%= product['item_id'] %>' class='wishlist-item-container'>
       <div class='wishlist-item-container-left'> 
-          <h2><a href='/wishlist/<%= @user[0] %>/<%= id %>'>   <%= h(item[:title]) %></a></h2>
+          <h2><a href='/wishlist/<%= product['belongs_to'] %>/<%= product['item_id'] %>'>   <%= h(product["title"]) %></a></h2>
         
-        <p><%= h(item[:description]) %></p>
+        <p><%= h(product["description"]) %></p>
 
-      <img id='delete--<%= id %>' class='icon delete' src="/images/trash-can.png" />
+      <img id='delete__<%= product['item_id'] %>' class='icon delete' src="/images/trash-can.png" />
       </div>
       <div class='wishlist-item-container-right'>
-        <p class='item_price'><%= h(item[:price]) %></p>
-        <img class='item_img' src="<%= item[:image_url] %>">
+        <p class='item_price'><%= h(product["price"]) %></p>
+        <img class='item_img' src="<%= product["image_url"] %>">
         
     
       </div>
