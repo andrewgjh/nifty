@@ -38,11 +38,14 @@ GEM
     multi_xml (0.6.0)
     mustermann (2.0.2)
       ruby2_keywords (~> 0.0.1)
+    nio4r (2.5.8)
     nokogiri (1.13.8)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     os (1.1.4)
     public_suffix (5.0.0)
+    puma (6.0.0)
+      nio4r (~> 2.0)
     racc (1.6.0)
     rack (2.2.4)
     rack-protection (2.2.2)
@@ -77,10 +80,11 @@ PLATFORMS
 DEPENDENCIES
   bcrypt (~> 3.1.12)
   erubis
-  firebase
+  firebase (~> 0.2.6)
   httparty
   minitest
   nokogiri
+  puma
   rack-test
   sinatra
   sinatra-contrib

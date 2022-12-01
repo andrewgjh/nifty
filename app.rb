@@ -10,7 +10,6 @@ require 'time'
 require 'bcrypt'
 
 require_relative 'scraper.rb'
-
 require_relative 'firebase_db.rb'
 
 

@@ -10,6 +10,7 @@ gem 'rack-test'
 gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'uuid'
+gem 'puma'
 
 gem 'httparty'
 gem 'nokogiri'
